@@ -1,63 +1,230 @@
-<!DOCTYPE html>
+<!doctype html>
+<!--
+  Jewellery Shop - Responsive Clone
+  Files included in this single-file preview: index.html + embedded CSS
+  - Responsive nav (desktop / mobile)
+  - Hero section
+  - Featured products grid
+  - Product cards with hover effect
+  - About section and footer
+  - CSS uses CSS variables, grid & flex, and mobile-first breakpoints
+  You can copy this file to `index.html` and open in a browser.
+-->
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Shine Jewelry</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aurora Jewellery — Responsive Clone</title>
+  <style>
+    :root{
+      --bg:#fbfbfb;
+      --card:#ffffff;
+      --accent:#b8860b; /* gold-ish */
+      --muted:#6b6b6b;
+      --radius:12px;
+      --maxw:1200px;
+      --gap:1rem;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:#111;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.4;
+      padding:2rem 1rem;
+      display:flex;justify-content:center;
+    }
+    .container{width:100%;max-width:var(--maxw)}
+
+    /* NAV */
+    .nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+    .brand{display:flex;gap:.7rem;align-items:center}
+    .brand .logo{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#f5d08a);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff}
+    nav ul{display:flex;gap:1rem;list-style:none;padding:0;margin:0}
+    nav a{text-decoration:none;color:var(--muted);font-weight:600}
+    .cta{padding:.55rem .9rem;background:var(--accent);color:#fff;border-radius:10px;text-decoration:none;font-weight:700}
+
+    /* HERO */
+    .hero{display:grid;grid-template-columns:1fr;gap:1rem;align-items:center;background:linear-gradient(180deg,rgba(255,255,255,0.6),transparent);padding:1rem;border-radius:var(--radius);box-shadow:0 6px 18px rgba(12,12,12,0.06)}
+    .hero-inner{display:flex;flex-direction:column;gap:.8rem}
+    .kicker{color:var(--accent);font-weight:800}
+    h1{margin:0;font-size:clamp(1.6rem,3.6vw,2.4rem)}
+    p.lead{margin:0;color:var(--muted)}
+    .hero-cta{margin-top:.8rem}
+
+    /* PRODUCTS */
+    .section{margin-top:1.2rem}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--gap)}
+    .card{background:var(--card);border-radius:14px;padding:1rem;box-shadow:0 4px 14px rgba(12,12,12,0.06);display:flex;flex-direction:column;gap:.6rem}
+    .img-wrap{height:160px;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff,#f7f5f1)}
+    .img-wrap img{max-width:90%;max-height:90%;object-fit:contain}
+    .product-title{font-weight:700}
+    .price{font-weight:800;color:var(--accent)}
+    .meta{color:var(--muted);font-size:.9rem}
+    .card .actions{margin-top:auto;display:flex;gap:.6rem}
+    .btn{flex:1;padding:.6rem;border-radius:10px;text-align:center;text-decoration:none;font-weight:700}
+    .btn-outline{border:1px solid #e6e6e6;color:var(--muted);background:transparent}
+    .btn-primary{background:var(--accent);color:white}
+
+    /* ABOUT + FOOTER */
+    .about{display:grid;grid-template-columns:1fr;gap:.8rem;padding:1rem;border-radius:12px;background:linear-gradient(180deg,#fff, #fbfbfb);margin-top:1rem}
+    footer{margin-top:1rem;color:var(--muted);font-size:.9rem;display:flex;justify-content:space-between;align-items:center}
+
+    /* RESPONSIVE */
+    @media(min-width:700px){
+      .hero{grid-template-columns:1fr 420px}
+      .grid{grid-template-columns:repeat(3,1fr)}
+    }
+    @media(min-width:1000px){
+      body{padding:3rem}
+      .grid{grid-template-columns:repeat(4,1fr)}
+    }
+
+    /* small mobile tweaks */
+    @media(max-width:480px){
+      .grid{grid-template-columns:1fr}
+      nav ul{display:none}
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Shine Jewelry</h1>
-    <nav>
-      <a href="#products">Products</a>
-      <a href="#gallery">Gallery</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </header>
-
-  <section class="hero">
-    <h2>Elegant. Timeless. Yours.</h2>
-    <p>Discover handcrafted jewelry made with love and passion.</p>
-    <a href="#products" class="btn">Shop Now</a>
-  </section>
-
-  <section id="products" class="products">
-    <h2>Our Collection</h2>
-    <div class="product-grid">
-      <div class="card">
-        <img src="./image/c1.jpg" alt="Ring" />
-        <h3>Diamond Ring</h3>
-        <p>$299</p>
+  <div class="container">
+    <header class="nav">
+      <div class="brand">
+        <div class="logo">A</div>
+        <div>
+          <div style="font-weight:800">Aurora Jewellery</div>
+          <div style="font-size:.8rem;color:var(--muted)">Handcrafted luxury</div>
+        </div>
       </div>
-      <div class="card">
-        <img src="./image/c2.jpg" alt="Necklace" />
-        <h3>Gold Necklace</h3>
-        <p>$499</p>
-      </div>
-      <div class="card">
-        <img src="./image/c3.jpg" alt="Bracelet" />
-        <h3>Silver Bracelet</h3>
-        <p>$199</p>
-      </div>
-    </div>
-  </section>
+      <nav>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#products">Products</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <a class="cta" href="#products">Shop Now</a>
+    </header>
 
-  <section id="gallery" class="gallery">
-    <h2>Gallery</h2>
-    <div class="gallery-grid">
-      <img src="./image/g1.jpg" alt="Gallery 1" />
-      <img src="./image/g2.jpg" alt="Gallery 2" />
-      <img src="./image/g3.jpg" alt="Gallery 3" />
-      
-    </div>
-  </section>
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="kicker">New arrivals • Summer 2025</div>
+        <h1>Timeless jewellery crafted for everyday elegance</h1>
+        <p class="lead">Discover necklaces, earrings, and rings made from ethically sourced materials. Free shipping on orders over ₹3,000.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#products" style="padding:.65rem 1rem;border-radius:12px;text-decoration:none;display:inline-block">Explore Collection</a>
+          <a class="btn btn-outline" href="#" style="margin-left:.6rem;padding:.65rem 1rem;border-radius:12px;text-decoration:none;display:inline-block">Gift Cards</a>
+        </div>
+      </div>
 
-  <footer id="contact">
-    <h2>Contact Us</h2>
-    <p>Email: vinitpatil21@gmail.com | Phone: 8390191618</p>
-    <p>&copy; 2025 Shine Jewelry. All rights reserved.</p>
-  </footer>
+      <div style="display:flex;align-items:center;justify-content:center">
+        <div style="width:100%;max-width:360px">
+          <div style="height:320px;border-radius:14px;overflow:hidden;background:linear-gradient(135deg,#fff,#f8f5ef);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(12,12,12,0.06)">
+            <!-- placeholder image (replace with product image) -->
+            <svg width="220" height="220" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="24" height="24" rx="6" fill="#f3e6d0"/>
+              <path d="M12 7C10.9 7 10 7.9 10 9C10 10.1 10.9 11 12 11C13.1 11 14 10.1 14 9C14 7.9 13.1 7 12 7Z" fill="#b8860b"/>
+              <path d="M7 16C7 13.33 9.33 11 12 11C14.67 11 17 13.33 17 16V17H7V16Z" fill="#e9d9c2"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="products" class="section">
+      <h2 style="margin:0 0 .6rem 0">Featured Products</h2>
+      <div class="grid">
+        <!-- product card 1 -->
+        <article class="card">
+          <div class="img-wrap"><img src="https://via.placeholder.com/300x200.png?text=Ring" alt="Gold Ring"/></div>
+          <div class="product-title">Solstice Gold Ring</div>
+          <div class="meta">14k gold • Sizes 5–9</div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div class="price">₹4,299</div>
+            <div class="rating meta">★★★★★</div>
+          </div>
+          <div class="actions">
+            <a class="btn btn-outline" href="#">Quick View</a>
+            <a class="btn btn-primary" href="#">Add to cart</a>
+          </div>
+        </article>
+
+        <!-- product card 2 -->
+        <article class="card">
+          <div class="img-wrap"><img src="https://via.placeholder.com/300x200.png?text=Earrings" alt="Earrings"/></div>
+          <div class="product-title">Luna Drop Earrings</div>
+          <div class="meta">Sterling silver • Hypoallergenic</div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div class="price">₹2,099</div>
+            <div class="rating meta">★★★★☆</div>
+          </div>
+          <div class="actions">
+            <a class="btn btn-outline" href="#">Quick View</a>
+            <a class="btn btn-primary" href="#">Add to cart</a>
+          </div>
+        </article>
+
+        <!-- product card 3 -->
+        <article class="card">
+          <div class="img-wrap"><img src="https://via.placeholder.com/300x200.png?text=Necklace" alt="Necklace"/></div>
+          <div class="product-title">Aurora Pendant Necklace</div>
+          <div class="meta">18" chain • Gold plated</div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div class="price">₹3,499</div>
+            <div class="rating meta">★★★★★</div>
+          </div>
+          <div class="actions">
+            <a class="btn btn-outline" href="#">Quick View</a>
+            <a class="btn btn-primary" href="#">Add to cart</a>
+          </div>
+        </article>
+
+        <!-- product card 4 -->
+        <article class="card">
+          <div class="img-wrap"><img src="https://via.placeholder.com/300x200.png?text=Bracelet" alt="Bracelet"/></div>
+          <div class="product-title">Serene Bracelet</div>
+          <div class="meta">Adjustable • Beaded</div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div class="price">₹1,199</div>
+            <div class="rating meta">★★★★☆</div>
+          </div>
+          <div class="actions">
+            <a class="btn btn-outline" href="#">Quick View</a>
+            <a class="btn btn-primary" href="#">Add to cart</a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <section id="about" class="about">
+      <div>
+        <h3 style="margin:0">About Aurora</h3>
+        <p style="margin:.4rem 0 0 0;color:var(--muted)">Aurora Jewellery crafts timeless pieces with an emphasis on sustainable sourcing and careful hand-finishing. Each piece is quality-checked and shipped with love.</p>
+      </div>
+      <div>
+        <h4 style="margin:0">Why choose us?</h4>
+        <ul style="color:var(--muted);margin:.4rem 0 0 0;padding-left:1.1rem">
+          <li>Free delivery over ₹3,000</li>
+          <li>30-day returns</li>
+          <li>Lifetime polishing service</li>
+        </ul>
+      </div>
+    </section>
+
+    <footer>
+      <div>© Aurora Jewellery 2025</div>
+      <div style="display:flex;gap:.8rem;align-items:center">
+        <div style="font-weight:700">Follow</div>
+        <div style="color:var(--muted)">Instagram • Facebook • Pinterest</div>
+      </div>
+    </footer>
+  </div>
 </body>
 </html>
