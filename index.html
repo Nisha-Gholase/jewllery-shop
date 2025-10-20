@@ -1,230 +1,309 @@
 <!doctype html>
 <!--
-  Jewellery Shop - Responsive Clone
-  Files included in this single-file preview: index.html + embedded CSS
-  - Responsive nav (desktop / mobile)
-  - Hero section
-  - Featured products grid
-  - Product cards with hover effect
-  - About section and footer
-  - CSS uses CSS variables, grid & flex, and mobile-first breakpoints
-  You can copy this file to `index.html` and open in a browser.
+  Jewellery Shop — Simple Responsive Clone
+  Single file: index.html (HTML + CSS + JavaScript)
+  Features:
+    - Responsive header with mobile menu
+    - Product grid
+    - Quick view modal
+    - Simple cart counter (stored in localStorage)
+    - Mobile-first and accessible markup
+  Copy this into `index.html` and open in your browser.
 -->
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Aurora Jewellery — Responsive Clone</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gemora Jewellery — Simple Responsive Shop</title>
   <style>
     :root{
-      --bg:#fbfbfb;
-      --card:#ffffff;
-      --accent:#b8860b; /* gold-ish */
-      --muted:#6b6b6b;
-      --radius:12px;
-      --maxw:1200px;
-      --gap:1rem;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial;
+      --bg:#faf9f8; --card:#fff; --accent:#b8860b; --muted:#666; --radius:12px; --gap:1rem; --maxw:1100px;
+      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
     }
     *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      background:var(--bg);
-      color:#111;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      line-height:1.4;
-      padding:2rem 1rem;
-      display:flex;justify-content:center;
+    body{margin:0; background:var(--bg); color:#111; -webkit-font-smoothing:antialiased}
+    .wrap{max-width:var(--maxw);margin:0 auto;padding:1rem}
+
+    /* Header */
+    header{display:flex;align-items:center;justify-content:space-between;padding:.6rem 0}
+    .brand{display:flex;gap:.6rem;align-items:center}
+    .logo{width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#f3d186);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800}
+    nav {display:flex;gap:1rem;align-items:center}
+    .nav-links{display:flex;gap:.8rem;list-style:none;padding:0;margin:0}
+    .nav-links a{text-decoration:none;color:var(--muted);font-weight:600}
+    .actions{display:flex;gap:.6rem;align-items:center}
+    .btn{background:var(--accent);color:white;padding:.5rem .8rem;border-radius:10px;text-decoration:none;font-weight:700}
+    .icon-btn{background:transparent;border:none;cursor:pointer;font-weight:700}
+    .cart-badge{background:#222;color:white;border-radius:999px;padding:.18rem .45rem;font-size:.85rem}
+
+    /* Mobile menu toggle */
+    .menu-toggle{display:none}
+    @media(max-width:600px){
+      .nav-links{display:none}
+      .menu-toggle{display:inline-flex}
     }
-    .container{width:100%;max-width:var(--maxw)}
 
-    /* NAV */
-    .nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
-    .brand{display:flex;gap:.7rem;align-items:center}
-    .brand .logo{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#f5d08a);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff}
-    nav ul{display:flex;gap:1rem;list-style:none;padding:0;margin:0}
-    nav a{text-decoration:none;color:var(--muted);font-weight:600}
-    .cta{padding:.55rem .9rem;background:var(--accent);color:#fff;border-radius:10px;text-decoration:none;font-weight:700}
+    /* Hero */
+    .hero{display:grid;gap:1rem;align-items:center;background:linear-gradient(180deg,rgba(255,255,255,0.6),transparent);padding:1rem;border-radius:var(--radius);box-shadow:0 6px 18px rgba(12,12,12,0.04);margin-top:.6rem}
+    .hero h1{margin:.2rem 0;font-size:1.6rem}
+    .hero p{margin:0;color:var(--muted)}
 
-    /* HERO */
-    .hero{display:grid;grid-template-columns:1fr;gap:1rem;align-items:center;background:linear-gradient(180deg,rgba(255,255,255,0.6),transparent);padding:1rem;border-radius:var(--radius);box-shadow:0 6px 18px rgba(12,12,12,0.06)}
-    .hero-inner{display:flex;flex-direction:column;gap:.8rem}
-    .kicker{color:var(--accent);font-weight:800}
-    h1{margin:0;font-size:clamp(1.6rem,3.6vw,2.4rem)}
-    p.lead{margin:0;color:var(--muted)}
-    .hero-cta{margin-top:.8rem}
+    /* Products grid */
+    .products{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--gap);margin-top:1rem}
+    .card{background:var(--card);padding:1rem;border-radius:10px;box-shadow:0 6px 12px rgba(12,12,12,0.04);display:flex;flex-direction:column}
+    .img-wrap{height:160px;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff,#f7f5f1);margin-bottom:.6rem}
+    .img-wrap img{max-width:100%;max-height:100%;object-fit:contain}
+    .title{font-weight:700}
+    .meta{color:var(--muted);font-size:.95rem}
+    .price{font-weight:800;color:var(--accent);margin-top:.4rem}
+    .card-actions{display:flex;gap:.5rem;margin-top:auto}
+    .btn-outline{border:1px solid #eee;padding:.5rem .6rem;border-radius:8px;background:transparent;cursor:pointer}
 
-    /* PRODUCTS */
-    .section{margin-top:1.2rem}
-    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--gap)}
-    .card{background:var(--card);border-radius:14px;padding:1rem;box-shadow:0 4px 14px rgba(12,12,12,0.06);display:flex;flex-direction:column;gap:.6rem}
-    .img-wrap{height:160px;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff,#f7f5f1)}
-    .img-wrap img{max-width:90%;max-height:90%;object-fit:contain}
-    .product-title{font-weight:700}
-    .price{font-weight:800;color:var(--accent)}
-    .meta{color:var(--muted);font-size:.9rem}
-    .card .actions{margin-top:auto;display:flex;gap:.6rem}
-    .btn{flex:1;padding:.6rem;border-radius:10px;text-align:center;text-decoration:none;font-weight:700}
-    .btn-outline{border:1px solid #e6e6e6;color:var(--muted);background:transparent}
-    .btn-primary{background:var(--accent);color:white}
+    /* Modal */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.4);padding:1rem}
+    .modal.open{display:flex}
+    .modal-content{width:100%;max-width:760px;background:var(--card);border-radius:10px;padding:1rem;display:grid;grid-template-columns:1fr;gap:.8rem}
+    .modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    .close{justify-self:end;background:transparent;border:none;font-weight:800;cursor:pointer}
 
-    /* ABOUT + FOOTER */
-    .about{display:grid;grid-template-columns:1fr;gap:.8rem;padding:1rem;border-radius:12px;background:linear-gradient(180deg,#fff, #fbfbfb);margin-top:1rem}
-    footer{margin-top:1rem;color:var(--muted);font-size:.9rem;display:flex;justify-content:space-between;align-items:center}
+    /* Footer */
+    footer{margin-top:1rem;padding:1rem 0;color:var(--muted);font-size:.95rem;display:flex;justify-content:space-between}
 
-    /* RESPONSIVE */
     @media(min-width:700px){
-      .hero{grid-template-columns:1fr 420px}
-      .grid{grid-template-columns:repeat(3,1fr)}
-    }
-    @media(min-width:1000px){
-      body{padding:3rem}
-      .grid{grid-template-columns:repeat(4,1fr)}
+      .products{grid-template-columns:repeat(3,1fr)}
+      .hero{grid-template-columns:1fr 360px}
+      .modal-content{grid-template-columns:1fr}
+      .modal-grid{grid-template-columns:1fr 1fr}
     }
 
-    /* small mobile tweaks */
-    @media(max-width:480px){
-      .grid{grid-template-columns:1fr}
-      nav ul{display:none}
+    @media(min-width:1000px){
+      .products{grid-template-columns:repeat(4,1fr)}
     }
+
+    /* small helpers */
+    .muted{color:var(--muted)}
   </style>
 </head>
 <body>
-  <div class="container">
-    <header class="nav">
+  <div class="wrap">
+    <header>
       <div class="brand">
-        <div class="logo">A</div>
+        <div class="logo">G</div>
         <div>
-          <div style="font-weight:800">Aurora Jewellery</div>
-          <div style="font-size:.8rem;color:var(--muted)">Handcrafted luxury</div>
+          <div style="font-weight:800">Gemora Jewellery</div>
+          <div style="font-size:.85rem;color:var(--muted)">Handmade & elegant</div>
         </div>
       </div>
+
       <nav>
-        <ul>
+        <ul class="nav-links" aria-label="Main navigation">
           <li><a href="#">Home</a></li>
           <li><a href="#products">Products</a></li>
           <li><a href="#about">About</a></li>
-          <li><a href="#contact">Contact</a></li>
         </ul>
       </nav>
-      <a class="cta" href="#products">Shop Now</a>
+
+      <div class="actions">
+        <button class="menu-toggle icon-btn" id="menuBtn" aria-expanded="false" aria-label="Open menu">☰</button>
+        <button class="icon-btn" id="searchBtn" aria-label="Search">🔍</button>
+        <button class="icon-btn" id="cartBtn" aria-label="Cart">🛒 <span id="cartCount" class="cart-badge">0</span></button>
+      </div>
     </header>
 
-    <section class="hero">
-      <div class="hero-inner">
-        <div class="kicker">New arrivals • Summer 2025</div>
-        <h1>Timeless jewellery crafted for everyday elegance</h1>
-        <p class="lead">Discover necklaces, earrings, and rings made from ethically sourced materials. Free shipping on orders over ₹3,000.</p>
-        <div class="hero-cta">
-          <a class="btn btn-primary" href="#products" style="padding:.65rem 1rem;border-radius:12px;text-decoration:none;display:inline-block">Explore Collection</a>
-          <a class="btn btn-outline" href="#" style="margin-left:.6rem;padding:.65rem 1rem;border-radius:12px;text-decoration:none;display:inline-block">Gift Cards</a>
-        </div>
-      </div>
-
-      <div style="display:flex;align-items:center;justify-content:center">
-        <div style="width:100%;max-width:360px">
-          <div style="height:320px;border-radius:14px;overflow:hidden;background:linear-gradient(135deg,#fff,#f8f5ef);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(12,12,12,0.06)">
-            <!-- placeholder image (replace with product image) -->
-            <svg width="220" height="220" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="24" height="24" rx="6" fill="#f3e6d0"/>
-              <path d="M12 7C10.9 7 10 7.9 10 9C10 10.1 10.9 11 12 11C13.1 11 14 10.1 14 9C14 7.9 13.1 7 12 7Z" fill="#b8860b"/>
-              <path d="M7 16C7 13.33 9.33 11 12 11C14.67 11 17 13.33 17 16V17H7V16Z" fill="#e9d9c2"/>
-            </svg>
+    <main>
+      <section class="hero">
+        <div>
+          <div class="kicker" style="color:var(--accent);font-weight:800">New • Collection 2025</div>
+          <h1>Delicate jewellery for everyday moments</h1>
+          <p class="muted">Explore rings, earrings and necklaces crafted with care. Free shipping above ₹2,500.</p>
+          <div style="margin-top:.8rem">
+            <a href="#products" class="btn">Shop Now</a>
+            <a href="#" class="btn btn-outline" style="margin-left:.5rem;padding:.45rem .6rem">Gift Cards</a>
           </div>
         </div>
-      </div>
-    </section>
 
-    <section id="products" class="section">
-      <h2 style="margin:0 0 .6rem 0">Featured Products</h2>
-      <div class="grid">
-        <!-- product card 1 -->
-        <article class="card">
-          <div class="img-wrap"><img src="https://via.placeholder.com/300x200.png?text=Ring" alt="Gold Ring"/></div>
-          <div class="product-title">Solstice Gold Ring</div>
-          <div class="meta">14k gold • Sizes 5–9</div>
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div class="price">₹4,299</div>
-            <div class="rating meta">★★★★★</div>
+        <div style="display:flex;align-items:center;justify-content:center">
+          <div style="width:100%;max-width:340px">
+            <div style="height:260px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#fff,#f8f5ef);box-shadow:0 12px 30px rgba(12,12,12,0.05)">
+              <!-- decorative svg -->
+              <svg width="180" height="180" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="24" height="24" rx="5" fill="#f6e8cf"/>
+                <path d="M12 7C10.9 7 10 7.9 10 9C10 10.1 10.9 11 12 11C13.1 11 14 10.1 14 9C14 7.9 13.1 7 12 7Z" fill="#b8860b"/>
+                <path d="M7 16C7 13.5 9.5 11 12 11C14.5 11 17 13.5 17 16V17H7V16Z" fill="#e9d9c2"/>
+              </svg>
+            </div>
           </div>
-          <div class="actions">
-            <a class="btn btn-outline" href="#">Quick View</a>
-            <a class="btn btn-primary" href="#">Add to cart</a>
-          </div>
-        </article>
+        </div>
+      </section>
 
-        <!-- product card 2 -->
-        <article class="card">
-          <div class="img-wrap"><img src="https://via.placeholder.com/300x200.png?text=Earrings" alt="Earrings"/></div>
-          <div class="product-title">Luna Drop Earrings</div>
-          <div class="meta">Sterling silver • Hypoallergenic</div>
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div class="price">₹2,099</div>
-            <div class="rating meta">★★★★☆</div>
-          </div>
-          <div class="actions">
-            <a class="btn btn-outline" href="#">Quick View</a>
-            <a class="btn btn-primary" href="#">Add to cart</a>
-          </div>
-        </article>
+      <section id="products" class="products" aria-live="polite">
+        <!-- product cards generated by JS for simplicity -->
+      </section>
 
-        <!-- product card 3 -->
-        <article class="card">
-          <div class="img-wrap"><img src="https://via.placeholder.com/300x200.png?text=Necklace" alt="Necklace"/></div>
-          <div class="product-title">Aurora Pendant Necklace</div>
-          <div class="meta">18" chain • Gold plated</div>
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div class="price">₹3,499</div>
-            <div class="rating meta">★★★★★</div>
-          </div>
-          <div class="actions">
-            <a class="btn btn-outline" href="#">Quick View</a>
-            <a class="btn btn-primary" href="#">Add to cart</a>
-          </div>
-        </article>
-
-        <!-- product card 4 -->
-        <article class="card">
-          <div class="img-wrap"><img src="https://via.placeholder.com/300x200.png?text=Bracelet" alt="Bracelet"/></div>
-          <div class="product-title">Serene Bracelet</div>
-          <div class="meta">Adjustable • Beaded</div>
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div class="price">₹1,199</div>
-            <div class="rating meta">★★★★☆</div>
-          </div>
-          <div class="actions">
-            <a class="btn btn-outline" href="#">Quick View</a>
-            <a class="btn btn-primary" href="#">Add to cart</a>
-          </div>
-        </article>
-
-      </div>
-    </section>
-
-    <section id="about" class="about">
-      <div>
-        <h3 style="margin:0">About Aurora</h3>
-        <p style="margin:.4rem 0 0 0;color:var(--muted)">Aurora Jewellery crafts timeless pieces with an emphasis on sustainable sourcing and careful hand-finishing. Each piece is quality-checked and shipped with love.</p>
-      </div>
-      <div>
-        <h4 style="margin:0">Why choose us?</h4>
-        <ul style="color:var(--muted);margin:.4rem 0 0 0;padding-left:1.1rem">
-          <li>Free delivery over ₹3,000</li>
-          <li>30-day returns</li>
-          <li>Lifetime polishing service</li>
-        </ul>
-      </div>
-    </section>
+      <section id="about" style="margin-top:1rem;padding:1rem;background:var(--card);border-radius:10px">
+        <h3 style="margin:.2rem 0">About Gemora</h3>
+        <p class="muted" style="margin:0">We craft small-batch jewellery with responsibly sourced materials. 30-day returns and lifetime polishing.</p>
+      </section>
+    </main>
 
     <footer>
-      <div>© Aurora Jewellery 2025</div>
-      <div style="display:flex;gap:.8rem;align-items:center">
-        <div style="font-weight:700">Follow</div>
-        <div style="color:var(--muted)">Instagram • Facebook • Pinterest</div>
-      </div>
+      <div>© Gemora Jewellery</div>
+      <div class="muted">Follow us on Instagram • Facebook</div>
     </footer>
   </div>
+
+  <!-- Modal for quick view -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-content" role="document">
+      <button class="close" id="closeModal" aria-label="Close">✕</button>
+      <div class="modal-grid">
+        <div style="display:flex;align-items:center;justify-content:center">
+          <div style="width:100%;max-width:320px">
+            <div id="modalImg" style="height:280px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff,#f7f5f1)"></div>
+          </div>
+        </div>
+        <div>
+          <h3 id="modalTitle">Product Title</h3>
+          <p id="modalDesc" class="muted">Product description</p>
+          <div id="modalPrice" style="font-weight:800;color:var(--accent);margin-top:.6rem">₹0</div>
+          <div style="margin-top:1rem;display:flex;gap:.6rem">
+            <button id="addCartModal" class="btn">Add to cart</button>
+            <button id="closeModal2" class="btn btn-outline">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Simple product data
+    const PRODUCTS = [
+      {id:1,title:'Solstice Gold Ring',price:4299,meta:'14k gold',img:'https://via.placeholder.com/400x300.png?text=Ring'},
+      {id:2,title:'Luna Drop Earrings',price:2099,meta:'Sterling silver',img:'https://via.placeholder.com/400x300.png?text=Earrings'},
+      {id:3,title:'Aurora Pendant',price:3499,meta:'Gold plated',img:'https://via.placeholder.com/400x300.png?text=Necklace'},
+      {id:4,title:'Serene Bracelet',price:1199,meta:'Beaded bracelet',img:'https://via.placeholder.com/400x300.png?text=Bracelet'},
+      {id:5,title:'Dawn Studs',price:899,meta:'Minimal studs',img:'https://via.placeholder.com/400x300.png?text=Studs'},
+      {id:6,title:'Eternal Band',price:4999,meta:'14k gold',img:'https://via.placeholder.com/400x300.png?text=Band'}
+    ];
+
+    const productsContainer = document.querySelector('.products');
+    const cartCountEl = document.getElementById('cartCount');
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modalImg');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDesc = document.getElementById('modalDesc');
+    const modalPrice = document.getElementById('modalPrice');
+    const addCartModalBtn = document.getElementById('addCartModal');
+
+    // Initialize cart from localStorage
+    let cart = JSON.parse(localStorage.getItem('simple_cart') || '[]');
+    updateCartCount();
+
+    function updateCartCount(){
+      cartCountEl.textContent = cart.length;
+    }
+
+    // Render product cards
+    function renderProducts(){
+      productsContainer.innerHTML = '';
+      PRODUCTS.forEach(p => {
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="img-wrap"><img src="${p.img}" alt="${escapeHtml(p.title)}"></div>
+          <div class="title">${escapeHtml(p.title)}</div>
+          <div class="meta">${escapeHtml(p.meta)}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div class="price">₹${p.price.toLocaleString()}</div>
+          </div>
+          <div class="card-actions">
+            <button class="btn-outline" data-id="${p.id}" aria-label="Quick view ${escapeHtml(p.title)}">Quick View</button>
+            <button class="btn" data-add="${p.id}">Add to cart</button>
+          </div>
+        `;
+        productsContainer.appendChild(card);
+      });
+    }
+
+    // Utility: escape HTML
+    function escapeHtml(str){return String(str).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')}
+
+    // Event delegation for product actions
+    productsContainer.addEventListener('click', (e)=>{
+      const q = e.target.closest('[data-id]');
+      if(q){
+        const id = Number(q.getAttribute('data-id'));
+        openQuickView(id);
+        return;
+      }
+      const addBtn = e.target.closest('[data-add]');
+      if(addBtn){
+        const id = Number(addBtn.getAttribute('data-add'));
+        addToCart(id);
+      }
+    });
+
+    function openQuickView(id){
+      const product = PRODUCTS.find(x=>x.id===id);
+      if(!product) return;
+      modalImg.innerHTML = `<img src="${product.img}" alt="${escapeHtml(product.title)}" style="max-width:100%;max-height:100%;object-fit:contain">`;
+      modalTitle.textContent = product.title;
+      modalDesc.textContent = product.meta;
+      modalPrice.textContent = '₹' + product.price.toLocaleString();
+      addCartModalBtn.setAttribute('data-add', product.id);
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden','false');
+    }
+
+    // Close modal
+    document.getElementById('closeModal').addEventListener('click', closeModal);
+    document.getElementById('closeModal2').addEventListener('click', closeModal);
+    modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
+    function closeModal(){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); }
+
+    // Add to cart
+    function addToCart(id){
+      const product = PRODUCTS.find(x=>x.id===id);
+      if(!product) return;
+      cart.push({id:product.id,title:product.title,price:product.price});
+      localStorage.setItem('simple_cart', JSON.stringify(cart));
+      updateCartCount();
+      // simple feedback
+      alert(product.title + ' added to cart');
+    }
+
+    // Modal add to cart
+    addCartModalBtn.addEventListener('click', (e)=>{
+      const id = Number(e.target.getAttribute('data-add'));
+      addToCart(id);
+      closeModal();
+    });
+
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('menuBtn');
+    menuBtn.addEventListener('click', ()=>{
+      const navLinks = document.querySelector('.nav-links');
+      const expanded = menuBtn.getAttribute('aria-expanded') === 'true';
+      menuBtn.setAttribute('aria-expanded', String(!expanded));
+      if(navLinks.style.display === 'flex'){
+        navLinks.style.display = '';
+      } else {
+        navLinks.style.display = 'flex';
+        navLinks.style.flexDirection = 'column';
+        navLinks.style.background = 'white';
+        navLinks.style.position = 'absolute';
+        navLinks.style.right = '1rem';
+        navLinks.style.top = '64px';
+        navLinks.style.padding = '0.6rem';
+        navLinks.style.boxShadow = '0 8px 22px rgba(12,12,12,0.08)';
+      }
+    });
+
+    // Initial render
+    renderProducts();
+
+    // Accessibility: close modal with Esc
+    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
+  </script>
 </body>
 </html>
